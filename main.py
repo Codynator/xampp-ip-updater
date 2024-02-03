@@ -93,7 +93,7 @@ if __name__ == '__main__':
     lines: list = result.split(setupData['seperator'])
 
     for line in lines:
-        # Look for line containing local ip
+        # Look for line containing local ip.
         if match(setupData['ipPattern'], line):
             # When found save local ip
             localIp = line.split(" ")[setupData['ipIndex']]
