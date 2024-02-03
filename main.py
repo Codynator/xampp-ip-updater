@@ -1,6 +1,7 @@
 from subprocess import run
 from re import match
 from platform import system
+from sys import exit
 
 
 class CommandNotFoundError(Exception):
@@ -22,14 +23,15 @@ def create_backup(data_to_save: list, backup_loc: str = "./httpd_copy.conf") -> 
 
 def execute_command(comm: str) -> str:
     try:
-        res: str = str(run(comm.split(), capture_output=True, text=True))
+        # encoding key argument is required because of Windows
+        res: str = str(run(comm.split(), capture_output=True, text=True, encoding='cp437'))
     except FileNotFoundError:
         raise CommandNotFoundError(f"Command not found.\nMake sure the command is available and written correctly.") \
             from None
     return res
 
 
-def update_ip(updated_content: list, loc: str, ip: str, reset_ip: bool = False):
+def update_ip(updated_content: list, loc: str, ip: str):
     server_name_regex: str = r"^ServerName .*"
     server_name_found: bool = False
     listen_regex: str = r"^Listen .*"
@@ -37,10 +39,10 @@ def update_ip(updated_content: list, loc: str, ip: str, reset_ip: bool = False):
 
     for index, row in enumerate(updated_content):
         if match(server_name_regex, row) and not server_name_found:
-            updated_content[index] = f"ServerName {ip}:80\n" if not reset_ip else "ServerName Localhost:80"
+            updated_content[index] = f"ServerName {ip}:80\n"
 
         if match(listen_regex, row) and not listen_found:
-            updated_content[index] = f"Listen {ip}:80\n" if not reset_ip else "Listen Localhost:80"
+            updated_content[index] = f"Listen {ip}:80\n"
 
     with open(loc, "w") as f:
         f.writelines(updated_content)
@@ -52,7 +54,9 @@ def adapt_to_the_os() -> dict:
         return {
             "command": "ifconfig",
             "ipPattern": r"^inet 192\.168\..*",
-            "confFileLoc": "./httpd.txt",
+            "confFileLoc": "./httpd.conf",
+            "seperator": "\\n        ",
+            "ipIndex": 1,
             "successful": True
         }
     elif os == "Windows":
@@ -60,6 +64,8 @@ def adapt_to_the_os() -> dict:
             "command": "ipconfig",
             "ipPattern": r"^IPv4 Address .* 192\.168\..*",
             "confFileLoc": "\\xampp\\apache\\conf\\httpd.conf",
+            "seperator": "\\n   ",
+            "ipIndex": 13,
             "successful": True
         }
     else:
@@ -68,30 +74,32 @@ def adapt_to_the_os() -> dict:
 
 if __name__ == '__main__':
     setupData: dict = adapt_to_the_os()
+    localIp: str = ""
+
+    with open(setupData['confFileLoc'], "r") as file:
+        fileContent: list = file.readlines()
 
     if not setupData['successful']:
+        # Raise an error if user's OS is not supported
         raise OSNotSupportedError("Your operating system is not supported.")
 
-    localIp: str = ""
-    fileContent: list = []
+    if input("Do you want to set Localhost as ip? (y/n) ").lower().startswith('y'):
+        # Set the ip to Localhost
+        localIp = "Localhost"
+        update_ip(fileContent, setupData['confFileLoc'], localIp)
+        exit()
 
     result = execute_command(setupData['command'])
-
-    lines: list = result.split("\\n        ")
+    lines: list = result.split(setupData['seperator'])
 
     for line in lines:
         # Look for line containing local ip
-        matches = match(setupData['ipPattern'], line)
-
-        if matches:
+        if match(setupData['ipPattern'], line):
             # When found save local ip
-            localIp = line.split(" ")[1]
+            localIp = line.split(" ")[setupData['ipIndex']]
 
     if not localIp:
         raise LocalIpNotFoundError("Local IP has not been found.\nAre you sure you're using the right command?")
-
-    with open(setupData['confFileLoc'], "r") as file:
-        fileContent = file.readlines()
 
     create_backup(fileContent)
 
