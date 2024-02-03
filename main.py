@@ -84,7 +84,7 @@ if __name__ == '__main__':
         raise OSNotSupportedError("Your operating system is not supported.")
 
     if input("Do you want to set Localhost as ip? (y/n) ").lower().startswith('y'):
-        # Set the ip to Localhost
+        # Set the ip to Localhost.
         localIp = "Localhost"
         update_ip(fileContent, setupData['confFileLoc'], localIp)
         exit()
