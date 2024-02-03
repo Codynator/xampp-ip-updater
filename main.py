@@ -62,7 +62,7 @@ def adapt_to_the_os() -> dict:
     elif os == "Windows":
         return {
             "command": "ipconfig",
-            "ipPattern": r"^IPv4 Address .* 192\.168\..*",
+            "ipPattern": r"^IPv4 Address.*192\.168\..*",
             "confFileLoc": "\\xampp\\apache\\conf\\httpd.conf",
             "seperator": "\\n   ",
             "ipIndex": 13,
