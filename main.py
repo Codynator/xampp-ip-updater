@@ -63,7 +63,7 @@ def adapt_to_the_os() -> dict:
         return {
             "command": "ipconfig",
             "ipPattern": r"^IPv4 Address.*192\.168\..*",
-            "confFileLoc": "\\xampp\\apache\\conf\\httpd.conf",
+            "confFileLoc": "c://xampp/apache/conf/httpd.conf",
             "seperator": "\\n   ",
             "ipIndex": 13,
             "successful": True
