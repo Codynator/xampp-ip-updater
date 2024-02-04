@@ -23,7 +23,7 @@ def create_backup(data_to_save: list, backup_loc: str = "./httpd_copy.conf") -> 
 
 def execute_command(comm: str) -> str:
     try:
-        # encoding key argument is required because of Windows
+        # Encoding key argument is required because of Windows 10
         res: str = str(run(comm.split(), capture_output=True, text=True, encoding='cp437'))
     except FileNotFoundError:
         raise CommandNotFoundError(f"Command not found.\nMake sure the command is available and written correctly.") \
