@@ -54,7 +54,7 @@ def adapt_to_the_os() -> dict:
         return {
             "command": "ifconfig",
             "ipPattern": r"^inet 192\.168\..*",
-            "confFileLoc": "./httpd.conf",
+            "confFileLoc": "/opt/lampp/etc/httpd.conf",
             "seperator": "\\n        ",
             "ipIndex": 1,
             "successful": True
@@ -84,8 +84,8 @@ if __name__ == '__main__':
         raise OSNotSupportedError("Your operating system is not supported.")
 
     if input("Do you want to set Localhost as ip? (y/n) ").lower().startswith('y'):
-        # Set the ip to Localhost.
-        localIp = "Localhost"
+        # Set the ip to Localhost
+        localIp = "localhost"
         update_ip(fileContent, setupData['confFileLoc'], localIp)
         exit()
 
