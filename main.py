@@ -2,8 +2,6 @@ from subprocess import run
 from re import match
 from platform import system
 from sys import exit
-
-import yaml
 from yaml import safe_load
 
 
@@ -91,7 +89,7 @@ def adapt_to_the_os() -> dict:
 def read_yaml_conf_file() -> dict:
     try:
         with open('settings.yaml', 'r') as f:
-            return yaml.safe_load(f)['settings']
+            return safe_load(f)['settings']
     except FileNotFoundError:
         return {
             'create_backup': True,
