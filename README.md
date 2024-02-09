@@ -5,6 +5,11 @@ httpd.conf file.
 
 ![The program running on Linux](terminal.jpg)
 
+## Requirements
+
+You need to have installed `PyYaml` module. You can download it using this command:
+`pip install pyyaml`
+
 ## Usage
 
 1. **Windows**: It’s recommended to run the program from the terminal. First, open cmd then change the current directory
