@@ -98,9 +98,9 @@ def read_yaml_conf_file() -> dict:
         }
 
 
-def check_and_return_url(ip: str) -> str | None:
+def check_and_return_url(ip: str) -> str:
     if not settings['return_server_url']:
-        return
+        return ""
 
     return f"Server's url: {ip}/"
 

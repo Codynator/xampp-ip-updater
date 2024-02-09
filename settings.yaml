@@ -2,6 +2,6 @@
 settings:
   # If create_backup is false, it overwrites ask_for_backup
   create_backup: Yes
-  ask_for_backup: Yes
-  return_server_url: Yes
+  ask_for_backup: No
+  return_server_url: No
 ...
