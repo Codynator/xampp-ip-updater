@@ -7,7 +7,7 @@ httpd.conf file.
 
 ## Requirements
 
-You need to have installed `PyYaml` module. You can download it using this command:
+You need to have installed `PyYaml` module. You can download it using this command:  
 `pip install pyyaml`
 
 ## Usage
