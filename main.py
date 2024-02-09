@@ -23,7 +23,7 @@ def create_backup(data_to_save: list, backup_loc: str = "./httpd_copy.conf") -> 
 
 def execute_command(comm: str) -> str:
     try:
-        # Encoding key argument is required because of Windows 10
+        # Encoding key argument is required because of Windows 10.
         res: str = str(run(comm.split(), capture_output=True, text=True, encoding='cp437'))
     except FileNotFoundError:
         raise CommandNotFoundError(f"Command not found.\nMake sure the command is available and written correctly.") \
@@ -80,11 +80,11 @@ if __name__ == '__main__':
         fileContent: list = file.readlines()
 
     if not setupData['successful']:
-        # Raise an error if user's OS is not supported
+        # Raise an error if user's OS is not supported.
         raise OSNotSupportedError("Your operating system is not supported.")
 
     if input("Do you want to set Localhost as ip? (y/n) ").lower().startswith('y'):
-        # Set the ip to Localhost
+        # Set the ip to Localhost and exit the program.
         localIp = "localhost"
         update_ip(fileContent, setupData['confFileLoc'], localIp)
         exit()
@@ -95,12 +95,15 @@ if __name__ == '__main__':
     for line in lines:
         # Look for line containing local ip.
         if match(setupData['ipPattern'], line):
-            # When found save local ip
+            # When found save local ip.
             localIp = line.split(" ")[setupData['ipIndex']]
 
     if not localIp:
         raise LocalIpNotFoundError("Local IP has not been found.\nAre you sure you're using the right command?")
+    else:
+        print(f"Updating IP to: {localIp}")
 
     create_backup(fileContent)
 
     update_ip(fileContent, setupData['confFileLoc'], localIp)
+    input()
